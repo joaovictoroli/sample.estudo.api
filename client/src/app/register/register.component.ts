@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { AccountService } from '../_services/account.service';
 import { Router } from '@angular/router';
@@ -23,13 +23,13 @@ import { Router } from '@angular/router';
     this.maxDate.setFullYear(this.maxDate.getFullYear() -18);
   }
 
-  initializeForm() {
+  initializeForm() {    
     this.registerForm = this.fb.group({      
       username: ['', Validators.required],
       email: ['', Validators.required],      
       from: ['', Validators.required],
       password: ['', [Validators.required, 
-        Validators.minLength(4), Validators.maxLength(20), 
+        Validators.minLength(6), Validators.maxLength(20), 
         Validators.pattern("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$")]],
       confirmPassword: ['', [Validators.required, this.matchValues('password')]],
     });
@@ -48,8 +48,16 @@ import { Router } from '@angular/router';
     this.registerForm.get('confirmPassword')!.disable();
     delete this.registerForm.value.confirmPassword;
     var values = {...this.registerForm.value};
-    console.log(values);
-    this.accountService.register(values);
+    //console.log(values);
+    this.accountService.register(values).subscribe({
+      next: response => {
+        this.cancel();
+        this.toastr.success("Registration Succesfull");
+      },
+      error: error => {
+        this.validationErrors = error;
+      } 
+    })
   }
 
   cancel() {

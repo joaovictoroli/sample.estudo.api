@@ -3,7 +3,6 @@ import { BehaviorSubject, map } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Injectable } from '@angular/core';
 import { User } from '../_models/user';
-import { Token } from '../_models/token';
 import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
@@ -11,15 +10,15 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class AccountService {
   baseUrl = environment.apiUrl;
-  private currentUserSource = new BehaviorSubject<Token | null>(null);
+  private currentUserSource = new BehaviorSubject<User | null>(null);
   currentUser$ = this.currentUserSource.asObservable();
 
   constructor(private http: HttpClient, private toastr: ToastrService) {}
 
   login(model: any) {
     console.log(model);
-    return this.http.post<Token>(this.baseUrl + 'auth/login', model).pipe(
-      map((response: Token) => {
+    return this.http.post<User>(this.baseUrl + 'auth/login', model).pipe(
+      map((response: User) => {
         const token = response;
         if (token) {
           this.setCurrentUser(token);
@@ -31,16 +30,17 @@ export class AccountService {
 
   register(model: User) {
     console.log(model);
-    return this.http.post<User>(this.baseUrl + 'auth/register', JSON.stringify(model));
+    console.log('nem fudendo');
+    return this.http.post<User>(this.baseUrl + 'auth/register', model);
   }
 
-  setCurrentUser(user: Token) {
-    localStorage.setItem('token', JSON.stringify(user));
+  setCurrentUser(user: User) {
+    localStorage.setItem('user', JSON.stringify(user));
     this.currentUserSource.next(user);
   }
 
   logout() {
-    localStorage.removeItem('token');
+    localStorage.removeItem('user');
     this.currentUserSource.next(null);
   }
 

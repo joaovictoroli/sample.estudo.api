@@ -19,6 +19,7 @@
         Passwords do not match
     </div>
     <div class="invalid-feedback" *ngIf="control.errors?.['pattern']">
-        Password requires non alphanumeric AND uppercase AND lowercase letter
+        Password requires non alphanumeric.
+        At least one uppercase and a lowercase letter.
     </div>
 </div>
