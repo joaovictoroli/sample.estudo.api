@@ -30,7 +30,6 @@ export class AccountService {
 
   register(model: User) {
     console.log(model);
-    console.log('nem fudendo');
     return this.http.post<User>(this.baseUrl + 'auth/register', model);
   }
 

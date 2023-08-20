@@ -14,7 +14,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SharedModule } from './_modules/shared.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { PostsComponent } from './posts/posts.component';
+import { PostsComponent } from './posts/posts/posts.component';
+import { CollapseModule } from 'ngx-bootstrap/collapse';
+import { PostCardComponent } from './posts/post-card/post-card.component';
+import { PostDetailComponent } from './posts/post-detail/post-detail.component';
+import { AddPostComponent } from './posts/add-post/add-post.component';
+
+
 
 @NgModule({
   declarations: [
@@ -24,7 +30,9 @@ import { PostsComponent } from './posts/posts.component';
     HomeComponent,
     RegisterInputComponent,
     PostsComponent,
-    
+    PostCardComponent,
+    PostDetailComponent,
+    AddPostComponent,    
   ],
   imports: [
     BrowserModule,
@@ -33,7 +41,8 @@ import { PostsComponent } from './posts/posts.component';
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
-    SharedModule
+    SharedModule,
+    CollapseModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },

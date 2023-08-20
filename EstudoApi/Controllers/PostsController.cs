@@ -31,6 +31,10 @@ namespace EstudoApi.Controllers
         public async Task<ActionResult<IEnumerable<PostDto>>> GetAllPosts()
         {
             var posts = await _postRepository.GetAllPostsAsync();
+            foreach (var post in posts)
+            {
+                Console.WriteLine($"Post {post.Id} posts");
+            }
             return Ok(posts);
         }
 

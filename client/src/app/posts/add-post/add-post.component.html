@@ -1,0 +1,25 @@
+<form [formGroup]="addPostForm" (ngSubmit)="addPostForm.valid && addPost()" autocomplete="off">
+    <h2 class="">Add Post</h2>
+    <hr>
+    <app-register-input [formControl]="$any(addPostForm.controls['title'])"
+        [label]="'Title'"></app-register-input>
+    <app-register-input [formControl]="$any(addPostForm.controls['content'])"
+        [label]="'content'"></app-register-input>
+
+
+    <div class="row" *ngIf="validationErrors">
+        <ul class="text-danger">
+            <li *ngFor="let error of validationErrors">
+                {{error}}
+            </li>
+        </ul>
+    </div>
+    
+
+    <div class="form-group text-center">
+        <button [disabled]="!addPostForm.valid" class="btn btn-success me-2" 
+            type="submit">Add Post</button>
+        <button class="btn btn-default me-2" 
+            type="button" (click)="cancel()">Cancel</button>
+    </div>
+</form>

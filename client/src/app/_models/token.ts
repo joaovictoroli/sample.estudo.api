@@ -1,6 +1,6 @@
-export interface Token {
-  token: string;
-  message: string;
-  }
+// export interface Token {
+//   token: string;
+//   message: string;
+//   }
 
   //to change

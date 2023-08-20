@@ -1,0 +1,16 @@
+.card {
+    width: 100%;
+}
+
+.titleNdate{
+    display: inline-block;
+}
+
+.text-muted {
+    font-size: small;
+}
+
+.btn {
+    align-items: center;
+    float: right;
+}
