@@ -13,23 +13,25 @@ export class AddPostComponent implements OnInit {
   addPostForm: FormGroup = new FormGroup({});
   validationErrors: string[] | undefined; 
 
-  constructor(private postService:  PostService, private fb: FormBuilder,
-    private toastr: ToastrService) { }
+  constructor(private postService:  PostService, private fb: FormBuilder) { }
 
 
   ngOnInit(): void {
-      this.initializeForm();
+    this.initializeForm();      
   }
   
   addPost() {   
     var values = {...this.addPostForm.value};
     this.postService.addPost(values).subscribe({
       next: response => {
-        this.toastr.success("Added Succesfuly");
+        localStorage.setItem('addedPost', 'True');
+        window.location.reload();        
+
       },
       error: error => {
         this.validationErrors = error;
       } 
+      
     })
   }
 
