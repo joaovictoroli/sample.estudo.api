@@ -31,10 +31,10 @@ namespace EstudoApi.Controllers
         public async Task<ActionResult<IEnumerable<PostDto>>> GetAllPosts()
         {
             var posts = await _postRepository.GetAllPostsAsync();
-            foreach (var post in posts)
-            {
-                Console.WriteLine($"Post {post.Id} posts");
-            }
+            //foreach (var post in posts)
+            //{
+            //    Console.WriteLine($"Post {post.Id} posts");
+            //}
             return Ok(posts);
         }
 
@@ -70,6 +70,7 @@ namespace EstudoApi.Controllers
         [HttpGet("{postId}")]
         public async Task<ActionResult<PostDetailsDto>> GetPostDetails(int postId)
         {
+            Console.WriteLine($"Post Details: {postId}");
             var post = await _postRepository.GetPostByIdAsync(postId);
 
             var replies = await _replyRepository.GetRepliesByPost(postId);

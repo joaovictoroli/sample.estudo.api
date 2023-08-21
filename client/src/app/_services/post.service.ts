@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { User } from '../_models/user';
 import { of, map } from 'rxjs';
 import { addPost } from '../_models/addPost';
+import { PostDetailed } from '../_models/postDetailed';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,8 @@ export class PostService {
   posts: Post[] = [];
   postsCache = new Map();
   user?: User | null;
+
+  post?: PostDetailed | null;
 
   constructor(private http: HttpClient) { }
 
@@ -32,4 +35,21 @@ export class PostService {
     console.log(model);
     return this.http.post<addPost>(this.baseUrl + 'posts', model);
   }
+
+  getPostDetail(postId: string) {
+    var response = this.http.get<PostDetailed>(this.baseUrl + 'posts/' + postId).pipe(
+      map(postDetail => {
+        this.post = postDetail;
+        console.log(this.post);
+        return postDetail;
+      })
+    )
+    if (this.post) {
+      console.log('aro')
+    }
+
+    return response;
+  }
+
+
 }

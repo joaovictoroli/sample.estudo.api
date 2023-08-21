@@ -1,5 +1,7 @@
 .card {
-    width: 100%;
+    width: 50%;
+    justify-content: center;
+    float: left;
 }
 
 .titleNdate{
@@ -13,4 +15,14 @@
 .btn {
     align-items: center;
     float: right;
+}
+
+.card-title {
+    text-decoration: underline;
+}
+
+.card-body {
+    padding-top: 7px;
+    padding-bottom: 5px;
+    text-align: center;
 }

@@ -12,9 +12,9 @@ const routes: Routes = [
     runGuardsAndResolvers: 'always',
     canActivate: [AuthGuard],
     children: [
-      { path: 'posts', component: PostsComponent },
-      { path: 'post-detail', component: PostDetailComponent },
-    ],
+      { path: 'posts', component: PostsComponent},
+      { path: 'post-detail/:postId', component: PostDetailComponent },
+    ]    
   }
 ];
 @NgModule({

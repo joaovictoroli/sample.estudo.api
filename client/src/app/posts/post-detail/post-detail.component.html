@@ -1,1 +1,19 @@
-<p>post-detail works!</p>
+<div class="div-card" *ngIf="postDetailed">
+  <div class="card">
+    <div class="card-title"> {{postDetailed.title}}</div>    
+    <div class="card-author">Author: {{postDetailed.userId}}</div>
+    <div class="card-created-date">Created Date: {{postDetailed.releaseDate}}</div>
+    <div class="card-content">
+      {{postDetailed.content}}
+  </div>
+<p class="text-muted date mb-1"><b>Replies: </b> </p>
+<div *ngFor="let reply of postDetailed.replies">   
+  <div class="reply-card">
+    <div class="reply-author">Author: {{reply.userId}}</div>
+      {{reply.content}}
+    </div>
+  </div>  
+</div>
+
+
+

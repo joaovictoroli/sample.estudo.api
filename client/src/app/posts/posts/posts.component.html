@@ -1,8 +1,9 @@
-<button (click)="addPostToggle()" class="btn btn-primary me-2">Add Post</button>
+<div class="text-center toggle-add"><button (click)="addPostToggle()" class="btn btn-primary me-2 align-center">Add Post</button>
+</div>
 
 <div *ngIf="addPostMode" class="container">
   <div class="row justify-content-center">
-      <div class="col-4">
+      <div class="col-10">
           <app-add-post (cancelRegister)="cancelAddPostMode($event)"></app-add-post>
       </div>
   </div>

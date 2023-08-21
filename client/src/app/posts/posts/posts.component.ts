@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { Post } from 'src/app/_models/post';
@@ -14,7 +15,7 @@ export class PostsComponent {
   isCollapsed = true;
   addPostMode = false;
   
-  constructor(private postService:  PostService, private toastr: ToastrService) { }
+  constructor(private postService:  PostService, private toastr: ToastrService, private router: Router) { }
 
   ngOnInit(): void {
     this.posts$ = this.postService.getMembers();    
@@ -28,6 +29,11 @@ export class PostsComponent {
   cancelAddPostMode(event: boolean) {
     this.addPostMode = event;
   }
+
+  postsDetails(id: number){
+    this.router.navigate(['post-detail', id]);
+  }
+
 
   checkLocalStorage() {
     if (localStorage.getItem('addedPost') === 'True') {
