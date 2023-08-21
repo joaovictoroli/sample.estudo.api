@@ -1,19 +1,48 @@
 <div class="div-card" *ngIf="postDetailed">
-  <div class="card">
-    <div class="card-title"> {{postDetailed.title}}</div>    
-    <div class="card-author">Author: {{postDetailed.userId}}</div>
-    <div class="card-created-date">Created Date: {{postDetailed.releaseDate}}</div>
-    <div class="card-content">
-      {{postDetailed.content}}
-  </div>
-<p class="text-muted date mb-1"><b>Replies: </b> </p>
-<div *ngFor="let reply of postDetailed.replies">   
+  <div class="post-card">
+    <h1 class="post-title">{{postDetailed.title}}</h1>
+    <p class="post-author">Author: {{postDetailed.username}}</p>
+    <p class="post-release-data">Created Date: {{postDetailed.releaseDate}}</p>
+    <p class="post-content">{{postDetailed.content}}</p>
+</div>
+
+<p class="replies text-muted"><b>Replies: </b> </p>
+<div *ngFor="let reply of postDetailed.replies">     
   <div class="reply-card">
-    <div class="reply-author">Author: {{reply.userId}}</div>
+    <div class="reply-author">Author: {{reply.username}}</div>
+    <p class="reply-content">
       {{reply.content}}
+    </p>
+    <!-- <i class="fa-solid fa-trash"></i> -->
     </div>
   </div>  
 </div>
+
+<p class="replies text-muted"><b>Add Reply: </b> </p>
+<hr>
+
+<form class="form-add" [formGroup]="addReplyForm" (ngSubmit)="addReplyForm.valid && addReply(postDetailed!.postId)" autocomplete="off">
+  
+  <div class="input-content">
+      <app-register-input [formControl]="$any(addReplyForm.controls['content'])"
+          [label]="'Comment'"></app-register-input>
+
+
+      <div *ngIf="validationErrors">
+          <ul class="text-danger">
+              <li *ngFor="let error of validationErrors">
+                  {{error}}
+              </li>
+          </ul>
+      </div>
+  </div>
+  <div class="form-group text-center">
+    <button [disabled]="!addReplyForm.valid" class="btn btn-secondary" 
+        type="submit">Submit</button>
+
+  </div> 
+</form>
+
 
 
 

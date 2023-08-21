@@ -5,6 +5,7 @@ export interface PostDetailed {
     title: string;
     content: number,
     releaseDate: Date,
+    username: string,
     userId: number,
     replies: Reply[]
   }

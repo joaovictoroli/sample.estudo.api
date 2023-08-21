@@ -17,13 +17,15 @@ namespace EstudoApi.Controllers
     {
         private readonly IPostRepository _postRepository;
         private readonly IReplyRepository _replyRepository;
+        private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
 
-        public PostsController(IPostRepository postRepository, IMapper mapper, IReplyRepository replyRepository)
+        public PostsController(IPostRepository postRepository, IMapper mapper, IReplyRepository replyRepository, UserManager<User> userManager)
         {
             _postRepository = postRepository;
             _mapper = mapper;
             _replyRepository = replyRepository;
+            _userManager = userManager;
         }
 
         [Authorize]
@@ -57,6 +59,7 @@ namespace EstudoApi.Controllers
         [HttpPost("{postId}")]
         public async Task<ActionResult<Reply>> AddReplyToPost(int postId, ReplyDto replyDto)
         {
+            replyDto.Username = User.GetUsername();
             var reply = _mapper.Map<ReplyDto, Reply>(replyDto);
 
             reply.PostId = postId;
@@ -73,10 +76,11 @@ namespace EstudoApi.Controllers
             Console.WriteLine($"Post Details: {postId}");
             var post = await _postRepository.GetPostByIdAsync(postId);
 
-            var replies = await _replyRepository.GetRepliesByPost(postId);
+            var repliesDto = await _replyRepository.GetRepliesByPost(postId);
 
-            var repliesDto = _mapper.Map < List<Reply>, List<ReplyDto>>(replies);
+            //var repliesDto = _mapper.Map < List<Reply>, List<ReplyDto>>(replies);
 
+            var user = await _userManager.FindByIdAsync(post.UserId.ToString());
             var postDetails = new PostDetailsDto()
             {
                 PostId = post.Id,
@@ -84,6 +88,7 @@ namespace EstudoApi.Controllers
                 Content = post.Content,
                 ReleaseDate = post.ReleaseDate,
                 Replies = repliesDto,
+                Username = user.UserName,
                 UserId = post.UserId
             };
 

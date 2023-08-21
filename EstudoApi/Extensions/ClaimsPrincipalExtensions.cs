@@ -14,5 +14,6 @@ namespace EstudoApi.Extensions
             Console.WriteLine(user.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             return int.Parse(user.FindFirst(ClaimTypes.NameIdentifier)?.Value);
         }
+
     }
 }

@@ -36,6 +36,11 @@ export class PostService {
     return this.http.post<addPost>(this.baseUrl + 'posts', model);
   }
 
+  addReply(content: string, postId: string) {
+    console.log(content);
+    return this.http.post<addPost>(this.baseUrl + 'posts/' + postId, content);
+  }
+
   getPostDetail(postId: string) {
     var response = this.http.get<PostDetailed>(this.baseUrl + 'posts/' + postId).pipe(
       map(postDetail => {
