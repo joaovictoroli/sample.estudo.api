@@ -19,6 +19,7 @@ import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { PostCardComponent } from './posts/post-card/post-card.component';
 import { PostDetailComponent } from './posts/post-detail/post-detail.component';
 import { AddPostComponent } from './posts/add-post/add-post.component';
+import { ModalModule } from 'ngx-bootstrap/modal';
 
 
 
@@ -42,7 +43,9 @@ import { AddPostComponent } from './posts/add-post/add-post.component';
     FormsModule,
     ReactiveFormsModule,
     SharedModule,
-    CollapseModule
+    CollapseModule,
+    FontAwesomeModule,
+    ModalModule.forRoot()
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },

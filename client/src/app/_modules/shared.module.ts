@@ -6,6 +6,7 @@ import { ToastrModule  } from 'ngx-toastr';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
+import { ModalModule } from 'ngx-bootstrap/modal';
 
 @NgModule({
   declarations: [],
@@ -13,6 +14,7 @@ import { CollapseModule } from 'ngx-bootstrap/collapse';
     CommonModule,
     BrowserModule,    
     BrowserAnimationsModule,
+    BsDropdownModule.forRoot(),
     ToastrModule.forRoot({ positionClass: 'toast-bottom-right' }),
     CollapseModule.forRoot(),
   ],
@@ -20,7 +22,8 @@ import { CollapseModule } from 'ngx-bootstrap/collapse';
     BsDropdownModule,
     ToastrModule,
     TabsModule,
-    BrowserModule
+    BrowserModule,
+    ModalModule
   ],
 })
 export class SharedModule {}

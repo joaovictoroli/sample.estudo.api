@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { Post } from '../_models/post';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpStatusCode } from '@angular/common/http';
 import { User } from '../_models/user';
-import { of, map } from 'rxjs';
+import { of, map, tap } from 'rxjs';
 import { addPost } from '../_models/addPost';
 import { PostDetailed } from '../_models/postDetailed';
 
@@ -38,7 +38,15 @@ export class PostService {
 
   addReply(content: string, postId: string) {
     console.log(content);
-    return this.http.post<addPost>(this.baseUrl + 'posts/' + postId, content);
+    var error = false;
+    this.http.post<addPost>(this.baseUrl + 'posts/' + postId, content, {observe: 'response'}).subscribe(response => {
+        if (response.status == 200) {
+          console.log('success')          
+        } else {
+          error = true;
+        }
+      });
+      return error;
   }
 
   getPostDetail(postId: string) {
@@ -55,6 +63,5 @@ export class PostService {
 
     return response;
   }
-
 
 }

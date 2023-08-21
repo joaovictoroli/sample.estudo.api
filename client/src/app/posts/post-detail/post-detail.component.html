@@ -4,8 +4,10 @@
     <p class="post-author">Author: {{postDetailed.username}}</p>
     <p class="post-release-data">Created Date: {{postDetailed.releaseDate}}</p>
     <p class="post-content">{{postDetailed.content}}</p>
+    <div *ngIf="user!.username == postDetailed.username">
+      <i class="bi bi-trash" (click)="openModal(template)"></i>
+    </div>
 </div>
-
 <p class="replies text-muted"><b>Replies: </b> </p>
 <div *ngFor="let reply of postDetailed.replies">     
   <div class="reply-card">
@@ -13,7 +15,9 @@
     <p class="reply-content">
       {{reply.content}}
     </p>
-    <!-- <i class="fa-solid fa-trash"></i> -->
+    <div *ngIf="user!.username == reply.username">
+      <i class="bi bi-trash"></i>
+    </div>
     </div>
   </div>  
 </div>
@@ -44,5 +48,14 @@
 </form>
 
 
+<!-- Modal -->
+<pre class="card card-block card-header">{{message}}</pre>
+<ng-template #template>
+  <div class="modal-body text-center">
+    <p>Do you want to confirm?</p>
+    <button type="button" class="btn btn-default" (click)="confirm()" >Yes</button>
+    <button type="button" class="btn btn-primary" (click)="decline()" >No</button>
+  </div>
+</ng-template>
 
 
