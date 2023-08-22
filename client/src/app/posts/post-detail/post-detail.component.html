@@ -1,61 +1,95 @@
 <div class="div-card" *ngIf="postDetailed">
   <div class="post-card">
-    <h1 class="post-title">{{postDetailed.title}}</h1>
-    <p class="post-author">Author: {{postDetailed.username}}</p>
-    <p class="post-release-data">Created Date: {{postDetailed.releaseDate}}</p>
-    <p class="post-content">{{postDetailed.content}}</p>
-    <div *ngIf="user!.username == postDetailed.username">
-      <i class="bi bi-trash" (click)="openModal(template)"></i>
-    </div>
-</div>
-<p class="replies text-muted"><b>Replies: </b> </p>
-<div *ngFor="let reply of postDetailed.replies">     
-  <div class="reply-card">
-    <div class="reply-author">Author: {{reply.username}}</div>
-    <p class="reply-content">
-      {{reply.content}}
+    <h1 class="post-title">{{ postDetailed.title }}</h1>
+    <p class="post-author">Author: {{ postDetailed.username }}</p>
+    <p class="post-release-data">
+      Created Date: {{ postDetailed.releaseDate }}
     </p>
-    <div *ngIf="user!.username == reply.username">
-      <i class="bi bi-trash"></i>
+    <p class="post-content">{{ postDetailed.content }}</p>
+    <div *ngIf="user!.username == postDetailed.username">
+      <i class="bi bi-trash" (click)="openModal(templateDeletePost)"></i>
     </div>
+  </div>
+  <div *ngIf="postDetailed.replies.length">
+    <p class="replies text-muted"><b>Replies: </b></p>
+  </div>
+
+  <div *ngFor="let reply of postDetailed.replies">
+    <div class="reply-card">
+      <div class="reply-author">Author: {{ reply.username }}</div>
+      <p class="reply-content">
+        {{ reply.content }}
+      </p>
+      <div *ngIf="user!.username == reply.username">
+        <div *ngIf="user!.username == reply.username">
+          <i
+            class="bi bi-trash"
+            (click)="openModalReply(templateDeleteReply, reply.id.toString())"
+          ></i>
+        </div>
+      </div>
     </div>
-  </div>  
-</div>
+  </div>
 
-<p class="replies text-muted"><b>Add Reply: </b> </p>
-<hr>
+  <p class="replies text-muted"><b>Add Reply: </b></p>
+  <hr />
 
-<form class="form-add" [formGroup]="addReplyForm" (ngSubmit)="addReplyForm.valid && addReply(postDetailed!.postId)" autocomplete="off">
-  
-  <div class="input-content">
-      <app-register-input [formControl]="$any(addReplyForm.controls['content'])"
-          [label]="'Comment'"></app-register-input>
-
+  <form
+    class="form-add"
+    [formGroup]="addReplyForm"
+    (ngSubmit)="addReplyForm.valid && addReply()"
+    autocomplete="off"
+  >
+    <div class="input-content">
+      <app-register-input
+        [formControl]="$any(addReplyForm.controls['content'])"
+        [label]="'Comment'"
+      ></app-register-input>
 
       <div *ngIf="validationErrors">
-          <ul class="text-danger">
-              <li *ngFor="let error of validationErrors">
-                  {{error}}
-              </li>
-          </ul>
+        <ul class="text-danger">
+          <li *ngFor="let error of validationErrors">
+            {{ error }}
+          </li>
+        </ul>
       </div>
-  </div>
-  <div class="form-group text-center">
-    <button [disabled]="!addReplyForm.valid" class="btn btn-secondary" 
-        type="submit">Submit</button>
-
-  </div> 
-</form>
-
-
-<!-- Modal -->
-<pre class="card card-block card-header">{{message}}</pre>
-<ng-template #template>
+    </div>
+    <div class="form-group text-center">
+      <button
+        [disabled]="!addReplyForm.valid"
+        class="btn btn-secondary"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</div>
+<pre class="card card-block card-header">{{ message }}</pre>
+<ng-template #templateDeletePost>
   <div class="modal-body text-center">
     <p>Do you want to confirm?</p>
-    <button type="button" class="btn btn-default" (click)="confirm()" >Yes</button>
-    <button type="button" class="btn btn-primary" (click)="decline()" >No</button>
+    <button type="button" class="btn btn-default" (click)="confirmDeletePost()">
+      Yes
+    </button>
+    <button type="button" class="btn btn-primary" (click)="decline()">
+      No
+    </button>
   </div>
 </ng-template>
 
-
+<ng-template #templateDeleteReply>
+  <div class="modal-body text-center">
+    <p>Do you want to confirm?</p>
+    <button
+      type="button"
+      class="btn btn-default"
+      (click)="confirmDeleteReply()"
+    >
+      Yes
+    </button>
+    <button type="button" class="btn btn-primary" (click)="decline()">
+      No
+    </button>
+  </div>
+</ng-template>

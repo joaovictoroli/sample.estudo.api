@@ -1,16 +1,19 @@
-<div class="text-center toggle-add"><button (click)="addPostToggle()" class="btn btn-primary me-2 align-center">Add Post</button>
+<div class="text-center toggle-add">
+  <button (click)="addPostToggle()" class="btn btn-primary me-2 align-center">
+    Add Post
+  </button>
 </div>
 
 <div *ngIf="addPostMode" class="container">
   <div class="row justify-content-center">
-      <div class="col-10">
-          <app-add-post (cancelRegister)="cancelAddPostMode($event)"></app-add-post>
-      </div>
+    <div class="col-10">
+      <app-add-post (cancelRegister)="cancelAddPostMode($event)"></app-add-post>
+    </div>
   </div>
 </div>
 
-<h1 class="text-center mb-4"> Posts</h1>
+<h1 class="text-center mb-4">Posts</h1>
 
-<div class="justify-content-center" *ngFor="let post of posts$ | async" >
+<div class="justify-content-center" *ngFor="let post of posts$ | async">
   <app-post-card [post]="post"></app-post-card>
 </div>

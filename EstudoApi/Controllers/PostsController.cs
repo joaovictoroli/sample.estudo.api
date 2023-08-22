@@ -118,6 +118,7 @@ namespace EstudoApi.Controllers
 
         public async Task<IActionResult> DeleteReply(int postId, int id)
         {
+            Console.WriteLine("Aqui");
             var userId = User.GetUserId();
             var reply = await _replyRepository.GetReplyById(id);
 

@@ -18,7 +18,7 @@ export class PostsComponent {
   constructor(private postService:  PostService, private toastr: ToastrService, private router: Router) { }
 
   ngOnInit(): void {
-    this.posts$ = this.postService.getMembers();    
+    this.posts$ = this.postService.getMembers();
     this.checkLocalStorage();
   }
 

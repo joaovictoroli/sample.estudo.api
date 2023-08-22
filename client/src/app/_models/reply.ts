@@ -1,6 +1,7 @@
 export interface Reply {
-    content: string,
-    postId: number,
-    userId: number,
-    username: string
-  }
+  id: number;
+  content: string;
+  postId: number;
+  userId: number;
+  username: string;
+}
