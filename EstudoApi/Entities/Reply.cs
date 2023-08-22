@@ -7,6 +7,7 @@ namespace EstudoApi.Entities
         public string Content { get; set; }
         public Post Post { get; set; }
         public int PostId { get; set; }
+        public string Username { get; set; }
         public int UserId { get; set; }
     }
 }

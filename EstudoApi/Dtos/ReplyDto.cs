@@ -1,9 +1,10 @@
 ﻿using EstudoApi.Entities;
+using EstudoApi.Entities.Common;
 using System.ComponentModel.DataAnnotations;
 
 namespace EstudoApi.Dtos
 {
-    public class ReplyDto
+    public class ReplyDto : BaseEntity
     {
         [Required]
         public string Content { get; set; }

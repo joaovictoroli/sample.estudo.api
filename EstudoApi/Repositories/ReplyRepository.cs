@@ -12,12 +12,10 @@ namespace EstudoApi.Repositories
     public class ReplyRepository : IReplyRepository
     {
         private readonly ApplicationDbContext _dbContext;
-        private readonly UserManager<User> _userManager;
 
-        public ReplyRepository(ApplicationDbContext dbContext, UserManager<User> userManager)
+        public ReplyRepository(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
-            _userManager = userManager;
         }
         public async Task<Reply> AddReplyAsync(Reply reply)
         {
@@ -26,25 +24,21 @@ namespace EstudoApi.Repositories
             return reply;
         }
 
-        public async Task<List<ReplyDto>> GetRepliesByPost(int postId)
+        public async Task<Reply> DeleteReplyByIdAsync(int id)
         {
-            var repliesDto = new List<ReplyDto>();
-            var replies = await _dbContext.Replies.Where(r => r.PostId == postId).ToListAsync();
+            var reply = await _dbContext.Replies.SingleOrDefaultAsync(post => post.Id == id);
 
-            foreach (var reply in replies)
-            {
-                var user = await _userManager.FindByIdAsync(reply.UserId.ToString());
+            if (reply == null) { return null; }
 
-                var replyDto = new ReplyDto()
-                {
-                    PostId = reply.PostId,
-                    UserId = reply.UserId,
-                    Username = user.UserName,
-                    Content = reply.Content
-                };
-                repliesDto.Add(replyDto);
-            }
-            return repliesDto;
+            _dbContext.Remove(reply);
+            await _dbContext.SaveChangesAsync();
+
+            return reply;
+        }
+
+        public async Task<Reply> GetReplyById(int Id)
+        {
+            return await _dbContext.Replies.FirstOrDefaultAsync(x => x.Id == Id);
         }
     }
 }

@@ -6,6 +6,7 @@ using EstudoApi.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 using System.Collections.Generic;
 
 
@@ -33,68 +34,111 @@ namespace EstudoApi.Controllers
         public async Task<ActionResult<IEnumerable<PostDto>>> GetAllPosts()
         {
             var posts = await _postRepository.GetAllPostsAsync();
-            //foreach (var post in posts)
-            //{
-            //    Console.WriteLine($"Post {post.Id} posts");
-            //}
-            return Ok(posts);
+
+            var postsDto = _mapper.Map<List<Post>, List<PostDto>>(posts);
+            return Ok(postsDto);
         }
 
         [Authorize]
         [HttpPost]
-        public async Task<ActionResult<Post>> AddPost(AddPostDto addPostDto)
+        public async Task<ActionResult<PostDto>> AddPost(AddPostDto addPostDto)
         {
             var userId = User.GetUserId();
+            var userName = User.GetUsername();
 
             var post = _mapper.Map<AddPostDto, Post>(addPostDto);
 
             post.UserId = userId;
+            post.Username = userName;
 
             post = await _postRepository.AddPostAsync(post);
 
-            return Ok(post);
+            return Ok(addPostDto);
         }
 
         [Authorize]
         [HttpPost("{postId}")]
-        public async Task<ActionResult<Reply>> AddReplyToPost(int postId, ReplyDto replyDto)
+        public async Task<ActionResult<ReplyDto>> AddReplyToPost(int postId, ReplyDto replyDto)
         {
-            replyDto.Username = User.GetUsername();
             var reply = _mapper.Map<ReplyDto, Reply>(replyDto);
+
+            var post = await _postRepository.GetPostByIdAsync(postId);
+
+            if (post == null)
+            {
+                return NotFound("Post not found");
+            }
 
             reply.PostId = postId;
             reply.UserId = User.GetUserId();
-            reply = await _replyRepository.AddReplyAsync(reply);
+            reply.Username = User.GetUsername();
+            
+            await _replyRepository.AddReplyAsync(reply);
 
-            return Ok(reply);
+            replyDto = _mapper.Map<Reply, ReplyDto>(reply);
+
+            return Ok(replyDto);
         }
 
         [Authorize]
         [HttpGet("{postId}")]
         public async Task<ActionResult<PostDetailsDto>> GetPostDetails(int postId)
-        {
-            Console.WriteLine($"Post Details: {postId}");
+        {           
             var post = await _postRepository.GetPostByIdAsync(postId);
+            var postDto = _mapper.Map<Post, PostDetailsDto>(post);
 
-            var repliesDto = await _replyRepository.GetRepliesByPost(postId);
-
-            //var repliesDto = _mapper.Map < List<Reply>, List<ReplyDto>>(replies);
-
-            var user = await _userManager.FindByIdAsync(post.UserId.ToString());
-            var postDetails = new PostDetailsDto()
-            {
-                PostId = post.Id,
-                Title = post.Title,
-                Content = post.Content,
-                ReleaseDate = post.ReleaseDate,
-                Replies = repliesDto,
-                Username = user.UserName,
-                UserId = post.UserId
-            };
-
-            return postDetails;
+            return postDto;
         }
 
+        [Authorize]
+        [HttpDelete("{postId}")]
 
+        public async Task<IActionResult> DeletePost(int postId)
+        {
+            var userId = User.GetUserId();
+
+            var post = await _postRepository.GetPostByIdAsync(postId);
+
+            if (post == null)
+            {
+                return NotFound();
+            }
+
+            if (post.UserId == userId) 
+            {
+                await _postRepository.DeletePostByIdAsync(postId);
+                return Ok(post);
+            }   
+
+            return BadRequest("Something went wrong");
+        }
+
+        [Authorize]
+        [HttpDelete("{postId}/{id}")]
+
+        public async Task<IActionResult> DeleteReply(int postId, int id)
+        {
+            var userId = User.GetUserId();
+            var reply = await _replyRepository.GetReplyById(id);
+
+            if (reply == null)
+            {
+                return NotFound("Reply not found");
+            }
+
+            if (reply.UserId == userId && reply.PostId == postId) 
+            {
+                await _replyRepository.DeleteReplyByIdAsync(id);
+                return Ok(reply);
+            }
+
+            var post = await _postRepository.GetPostByIdAsync(postId);
+            if (post == null)
+            {
+                return NotFound("Post not found");
+            }
+
+            return BadRequest("Something went wrong");
+        }
     }
 }

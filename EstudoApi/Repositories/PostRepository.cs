@@ -12,15 +12,10 @@ namespace EstudoApi.Repositories
     public class PostRepository : IPostRepository
     {
         private readonly ApplicationDbContext _dbContext;
-        private readonly IReplyRepository _replyRepository;
-        private readonly IMapper _mapper;
-        private readonly UserManager<User> _userManager;
 
-        public PostRepository(ApplicationDbContext dbContext, IReplyRepository replyRepository, IMapper mapper)
+        public PostRepository(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
-            _replyRepository = replyRepository;
-            _mapper = mapper;
         }
         public async Task<Post> AddPostAsync(Post post)
         {
@@ -29,42 +24,36 @@ namespace EstudoApi.Repositories
             return post;
         }
 
-        public async Task<List<PostDto>> GetAllPostsAsync()
+        public async Task<Post> DeletePostByIdAsync(int id)
+        {
+            var post = await _dbContext.Posts.SingleOrDefaultAsync(post => post.Id == id);
+
+            if (post == null) { return null; }
+
+            _dbContext.Remove(post);
+            await _dbContext.SaveChangesAsync();
+
+            return post;
+        }
+
+        public async Task<List<Post>> GetAllPostsAsync()
         {
             var query = _dbContext.Posts
                 .OrderByDescending(x => x.ReleaseDate)
-                //.Take(4)
-                .AsQueryable();
+                .Include(r => r.Replies)
+                .ToList();
 
-            var listPost = await query.ToListAsync();
-            var listPostDto = _mapper.Map<List<Post>, List<PostDto>>(listPost);
+            var list = query.ToList();
 
-            //foreach (var post in listPost)
-            //{
-            //    var user = _dbContext.Users.FirstOrDefaultAsync(x=> x.Id == post.UserId);                
-            //}
-
-
-            //foreach (var postDto in listPostDto)
-            //{                
-            //    var replies = await _dbContext.Replies.Where(x => x.PostId == postDto.Id).ToListAsync();
-            //    postDto.CountReplies = replies.Count();                
-            //}
-
-            for (int i = 0; i < listPostDto.Count(); i++)
-            {
-                var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == listPost[i].UserId);
-                var replies = await _dbContext.Replies.Where(x => x.PostId == listPostDto[i].Id).ToListAsync();
-                listPostDto[i].CountReplies = replies.Count();
-                listPostDto[i].UserName = user.UserName;
-            }
-
-            return listPostDto;
+            return list;
         }
 
         public async Task<Post> GetPostByIdAsync(int id)
         {
-            return await _dbContext.Posts.FirstOrDefaultAsync(p => p.Id == id);
+            var post = await _dbContext.Posts.Include(x => x.Replies)
+                                            .FirstOrDefaultAsync(x => x.Id == id);
+
+            return post;
         }
     }
 }

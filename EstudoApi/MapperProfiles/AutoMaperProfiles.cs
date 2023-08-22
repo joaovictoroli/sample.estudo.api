@@ -8,12 +8,13 @@ namespace EstudoApi.MapperProfiles
     {
         public AutoMaperProfiles()
         {
-            CreateMap<Post, PostDto>().ReverseMap().ForMember(x => x.Replies, opt => opt.Ignore());
+            CreateMap<Post, PostDto>().
+                ForMember(x => x.CountReplies, opt => opt.MapFrom(o => o.Replies.Count()));
+            CreateMap<PostDto, Post>();
+            CreateMap<Post, PostDetailsDto>().ReverseMap();
+
             CreateMap<Post, AddPostDto>().ReverseMap();
             CreateMap<Reply, ReplyDto>().ReverseMap();
-            //CreateMap<PostDto, Post>()
-            //    .ForMember(d => d.CountReply, o => o.MapFrom(s => s.Sender.Photos
-            //    .FirstOrDefault(x => x.IsMain).Url));
         }
     }
 }

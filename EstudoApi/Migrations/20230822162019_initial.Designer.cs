@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EstudoApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230817213939_initial")]
+    [Migration("20230822162019_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -76,6 +76,10 @@ namespace EstudoApi.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Posts");
@@ -98,6 +102,10 @@ namespace EstudoApi.Migrations
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

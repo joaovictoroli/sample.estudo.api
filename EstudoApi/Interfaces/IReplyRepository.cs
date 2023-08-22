@@ -6,6 +6,7 @@ namespace EstudoApi.Interfaces
     public interface IReplyRepository
     {
         Task<Reply> AddReplyAsync(Reply reply);
-        Task<List<ReplyDto>> GetRepliesByPost(int postId);
+        Task<Reply> DeleteReplyByIdAsync(int id);
+        Task<Reply> GetReplyById(int id);
     }
 }
