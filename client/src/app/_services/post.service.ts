@@ -20,7 +20,7 @@ export class PostService {
 
   constructor(private http: HttpClient) {}
 
-  getMembers() {
+  getPosts() {
     if (this.posts.length > 0) return of(this.posts);
     return this.http.get<Post[]>(this.baseUrl + 'posts').pipe(
       map((posts) => {

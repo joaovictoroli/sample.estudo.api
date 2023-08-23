@@ -8,38 +8,43 @@ import { PostService } from 'src/app/_services/post.service';
 @Component({
   selector: 'app-posts',
   templateUrl: './posts.component.html',
-  styleUrls: ['./posts.component.css']
+  styleUrls: ['./posts.component.css'],
 })
 export class PostsComponent {
-  posts$: Observable<Post[]> | undefined
+  posts$: Observable<Post[]> | undefined;
   isCollapsed = true;
   addPostMode = false;
-  
-  constructor(private postService:  PostService, private toastr: ToastrService, private router: Router) { }
+
+  constructor(
+    private postService: PostService,
+    private toastr: ToastrService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
-    this.posts$ = this.postService.getMembers();
+    this.posts$ = this.postService.getPosts();
     this.checkLocalStorage();
   }
 
   addPostToggle() {
-    this.addPostMode = !this.addPostMode
+    this.addPostMode = !this.addPostMode;
   }
 
   cancelAddPostMode(event: boolean) {
     this.addPostMode = event;
   }
 
-  postsDetails(id: number){
+  postsDetails(id: number) {
     this.router.navigate(['post-detail', id]);
   }
 
-
   checkLocalStorage() {
     if (localStorage.getItem('addedPost') === 'True') {
-      this.toastr.success("Added Successfully");
+      this.toastr.success('Added Successfully');
       localStorage.removeItem('addedPost');
+    } else if (localStorage.getItem('DeletedPost') === 'True') {
+      this.toastr.success('Deleted Successfully');
+      localStorage.removeItem('DeletedPost');
     }
   }
 }
-

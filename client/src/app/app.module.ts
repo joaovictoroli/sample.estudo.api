@@ -20,8 +20,7 @@ import { PostCardComponent } from './posts/post-card/post-card.component';
 import { PostDetailComponent } from './posts/post-detail/post-detail.component';
 import { AddPostComponent } from './posts/add-post/add-post.component';
 import { ModalModule } from 'ngx-bootstrap/modal';
-
-
+import { LoadingInterceptor } from './_interceptors/loading.interceptor';
 
 @NgModule({
   declarations: [
@@ -33,7 +32,7 @@ import { ModalModule } from 'ngx-bootstrap/modal';
     PostsComponent,
     PostCardComponent,
     PostDetailComponent,
-    AddPostComponent,    
+    AddPostComponent,
   ],
   imports: [
     BrowserModule,
@@ -45,12 +44,13 @@ import { ModalModule } from 'ngx-bootstrap/modal';
     SharedModule,
     CollapseModule,
     FontAwesomeModule,
-    ModalModule.forRoot()
+    ModalModule.forRoot(),
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

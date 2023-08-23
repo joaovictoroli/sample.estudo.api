@@ -119,7 +119,10 @@ export class PostDetailComponent implements OnInit {
   confirmDeletePost(): void {
     if (this.postId) {
       var is_error = this.postService.deletePost(this.postId);
-      if (!is_error) this.routerTo.navigateByUrl('/posts');
+      if (!is_error) {
+        localStorage.setItem('DeletedPost', 'True');
+        this.routerTo.navigateByUrl('/posts');
+      }
     } else {
       this.toastr.error('Something went wrong');
     }
