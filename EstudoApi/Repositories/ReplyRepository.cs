@@ -1,7 +1,11 @@
 ﻿using EstudoApi.Data;
+using EstudoApi.Dtos;
 using EstudoApi.Entities;
 using EstudoApi.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
+using System.Reflection.Metadata.Ecma335;
 
 namespace EstudoApi.Repositories
 {
@@ -20,9 +24,21 @@ namespace EstudoApi.Repositories
             return reply;
         }
 
-        public async Task<List<Reply>> GetRepliesByPost(int postId)
+        public async Task<Reply> DeleteReplyByIdAsync(int id)
         {
-            return await _dbContext.Replies.Where(r => r.PostId == postId).ToListAsync();
+            var reply = await _dbContext.Replies.SingleOrDefaultAsync(post => post.Id == id);
+
+            if (reply == null) { return null; }
+
+            _dbContext.Remove(reply);
+            await _dbContext.SaveChangesAsync();
+
+            return reply;
+        }
+
+        public async Task<Reply> GetReplyById(int Id)
+        {
+            return await _dbContext.Replies.FirstOrDefaultAsync(x => x.Id == Id);
         }
     }
 }

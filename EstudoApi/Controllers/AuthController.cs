@@ -30,6 +30,7 @@ namespace EstudoApi.Controllers
         [Route("Register")]
         public async Task<IActionResult> Register([FromBody] UserDetails userDetails)
         {
+            Console.WriteLine("AROU");
             if (!ModelState.IsValid || userDetails == null)
             {
                 return new BadRequestObjectResult(new { Message = "User Registration Failed" });
@@ -71,10 +72,18 @@ namespace EstudoApi.Controllers
                 return new BadRequestObjectResult(new { Message = "Invalid Credentials" });
             }
 
+            var user = userManager.Users.FirstOrDefault(u => u.UserName == credentials.Username);
             var token = GenerateToken(identityUser);
 
-            var objt = new { Token = token, Message = "Success" };
-            return Ok(objt);
+
+            var userDto = new UserDto()
+            {
+                Username = user.UserName,
+                From = user.From,
+                Token = token
+            };
+
+            return Ok(userDto);
         }
 
         [HttpPost]

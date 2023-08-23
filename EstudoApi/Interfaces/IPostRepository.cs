@@ -6,8 +6,8 @@ namespace EstudoApi.Interfaces
     public interface IPostRepository
     {
         Task<Post> AddPostAsync(Post post);
-        Task<List<PostDto>> GetAllPostsAsync();
+        Task<List<Post>> GetAllPostsAsync();
         Task<Post> GetPostByIdAsync(int id);
-
+        Task<Post> DeletePostByIdAsync(int id);
     }
 }
