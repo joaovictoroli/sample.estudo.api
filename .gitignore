@@ -10,10 +10,6 @@
 *.userosscache
 *.sln.docstates
 
-#MyConfig
-/EstudoApi/bin.*
-/EstudoApi/obj.*
-
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
@@ -399,3 +395,10 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+#MyConfig
+/EstudoApi/bin.*
+/EstudoApi/obj.*
+/client/angular/.cache
+/client/node_modules
+
