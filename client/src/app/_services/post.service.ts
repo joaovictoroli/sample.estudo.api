@@ -25,7 +25,6 @@ export class PostService {
     return this.http.get<Post[]>(this.baseUrl + 'posts').pipe(
       map((posts) => {
         this.posts = posts;
-        console.log(posts.length);
         return posts;
       })
     );

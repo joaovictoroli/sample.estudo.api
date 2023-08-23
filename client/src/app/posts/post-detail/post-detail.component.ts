@@ -14,12 +14,13 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, take } from 'rxjs';
+import { Observable, take, of } from 'rxjs';
 import { PostDetailed } from 'src/app/_models/postDetailed';
 import { User } from 'src/app/_models/user';
 import { AccountService } from 'src/app/_services/account.service';
 import { PostService } from 'src/app/_services/post.service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { ToastrMsgService } from 'src/app/_services/toastr-msg.service';
 
 @Component({
   selector: 'app-post-detail',
@@ -27,7 +28,7 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
   styleUrls: ['./post-detail.component.css'],
 })
 export class PostDetailComponent implements OnInit {
-  postDetailed: PostDetailed | undefined;
+  postDetailed$: Observable<PostDetailed> | undefined;
   postId: string | undefined;
   user?: User;
   replyId: string | undefined;
@@ -47,7 +48,8 @@ export class PostDetailComponent implements OnInit {
     private fb: FormBuilder,
     private accountService: AccountService,
     private modalService: BsModalService,
-    private routerTo: Router
+    private routerTo: Router,
+    private toastrMsg: ToastrMsgService
   ) {
     this.accountService.currentUser$.pipe(take(1)).subscribe({
       next: (user) => {
@@ -57,26 +59,20 @@ export class PostDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    //this.toastrMsg.getPending();
     this.initializeForm();
 
     this.postId = this.route.snapshot.params['postId'];
 
-    if (this.postId) {
-      this.postService.getPostDetail(this.postId).subscribe(
-        (data) => {
-          this.postDetailed = data;
-          //console.log(this.postDetailed.replies);
-        },
-        (error) => {
-          console.log(error);
-          this.toastr.error('Error occurred');
-        }
-      );
-    }
+    this.postDetailed$ = this.postService.getPostDetail(this.postId!);
 
     if (localStorage.getItem('addedReply') === 'True') {
-      this.toastr.success('Added Successfully');
+      this.toastr.success('Reply Added Successfully');
       localStorage.removeItem('addedReply');
+    }
+    if (localStorage.getItem('deletedReply') === 'True') {
+      this.toastr.success('Reply Deleted Successfully');
+      localStorage.removeItem('deletedReply');
     }
 
     this.addReplyForm.valueChanges.subscribe((result) => {
@@ -102,8 +98,11 @@ export class PostDetailComponent implements OnInit {
 
     var is_error = this.postService.addReply(values, this.postId!);
     if (!is_error) {
+      console.log('heelo');
+      this.toastrMsg.setPending('Added Reply Successfully');
       localStorage.setItem('addedReply', 'True');
-      //window.location.reload();
+      //this.routerTo.navigateByUrl('/post-detail/' + this.postId);
+      window.location.reload();
     }
   }
 
@@ -120,13 +119,25 @@ export class PostDetailComponent implements OnInit {
     if (this.postId) {
       var is_error = this.postService.deletePost(this.postId);
       if (!is_error) {
-        localStorage.setItem('DeletedPost', 'True');
+        this.toastrMsg.setPending('Deleted Successfully');
+        localStorage.setItem('deletedPost', 'True');
         this.routerTo.navigateByUrl('/posts');
       }
-    } else {
-      this.toastr.error('Something went wrong');
     }
     this.modalRef?.hide();
+    // this.toastrMsg.setPending('Deleted Successfully');
+    //this.modalRef?.hide();
+
+    // if (this.postId) {
+    //   var is_error = this.postService.deletePost(this.postId);
+    //   if (!is_error) {
+    //     localStorage.setItem('DeletedPost', 'True');
+    //     this.routerTo.navigateByUrl('/posts');
+    //   }
+    // } else {
+    //   this.toastr.error('Something went wrong');
+    // }
+    // this.modalRef?.hide();
   }
 
   confirmDeleteReply(): void {
@@ -134,6 +145,9 @@ export class PostDetailComponent implements OnInit {
       console.log('PostId' + this.postId);
       console.log('ReplyId' + this.postId);
       this.postService.deleteReply(this.postId, this.replyId);
+      localStorage.setItem('deletedReply', 'True');
+      window.location.reload();
+      //this.toastrMsg.setPending('Deleted Successfully');
       this.modalRef?.hide();
     }
   }

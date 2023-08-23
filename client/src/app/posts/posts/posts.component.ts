@@ -42,9 +42,9 @@ export class PostsComponent {
     if (localStorage.getItem('addedPost') === 'True') {
       this.toastr.success('Added Successfully');
       localStorage.removeItem('addedPost');
-    } else if (localStorage.getItem('DeletedPost') === 'True') {
-      this.toastr.success('Deleted Successfully');
-      localStorage.removeItem('DeletedPost');
+    } else if (localStorage.getItem('deletedPost') === 'True') {
+      this.toastr.success('Post Deleted Successfully');
+      localStorage.removeItem('deletedPost');
     }
   }
 }
